@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Beremiz" productName="Beremiz" productVersion="1" creationDateTime="2016-10-24T18:09:22"/>
-  <contentHeader name="First Steps" modificationDateTime="2018-09-26T12:52:51">
+  <contentHeader name="First Steps" modificationDateTime="2022-11-13T14:41:21">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -20,7 +20,7 @@
       <pou name="AverageVal" pouType="function">
         <interface>
           <returnType>
-            <REAL/>
+            <INT/>
           </returnType>
           <inputVars>
             <variable name="Cnt1">
@@ -52,10 +52,10 @@
           <localVars>
             <variable name="InputsNumber">
               <type>
-                <REAL/>
+                <INT/>
               </type>
               <initialValue>
-                <simpleValue value="5.0"/>
+                <simpleValue value="5"/>
               </initialValue>
               <documentation>
                 <xhtml:p><![CDATA[Количество входных значений]]></xhtml:p>
@@ -65,7 +65,7 @@
         </interface>
         <body>
           <ST>
-            <xhtml:p><![CDATA[AverageVal := INT_TO_REAL(Cnt1+Cnt2+Cnt3+Cnt4+Cnt5)/InputsNumber;]]></xhtml:p>
+            <xhtml:p><![CDATA[AverageVal := (Cnt1+Cnt2+Cnt3+Cnt4+Cnt5)/InputsNumber;]]></xhtml:p>
           </ST>
         </body>
       </pou>
@@ -133,7 +133,7 @@
             </variable>
             <variable name="AVCnt">
               <type>
-                <REAL/>
+                <INT/>
               </type>
             </variable>
           </localVars>
