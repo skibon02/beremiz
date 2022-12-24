@@ -1520,7 +1520,7 @@ class ProjectController(ConfigTreeNode, PLCControler):
                     self.AppFrame.ConnectionStatusBar.SetStatusText(
                         _("Connected to URI: %s") % self.BeremizRoot.getURI_location().strip(), 1)
                     self.AppFrame.ConnectionStatusBar.SetStatusText(
-                        _(str(status)), 2)
+                        _(status), 2)
         return updated
 
     def ShowPLCProgress(self, status="", progress=0):
@@ -1960,8 +1960,7 @@ class ProjectController(ConfigTreeNode, PLCControler):
 
         # purge any non-finished transfer
         # note: this would abord any runing transfer with error
-        # TODO: implement PurgeBlobs in YAPLC
-        # self._connector.PurgeBlobs()
+        self._connector.PurgeBlobs()
 
         try:
             # transfer extra files
@@ -1980,16 +1979,16 @@ class ProjectController(ConfigTreeNode, PLCControler):
             # Send PLC on target
             object_path = builder.GetBinaryPath()
             # arbitrarily use MD5 as a seed, could be any string
-            # object_blob = self._connector.BlobFromFile(object_path, MD5)
+            object_blob = self._connector.BlobFromFile(object_path, MD5)
         except IOError as e:
             self.HidePLCProgress()
             self.logger.write_error(repr(e))
         else:
             self.HidePLCProgress()
             self.logger.write(_("PLC data transfered successfully.\n"))
-            data = builder.GetBinaryCode()
-            if data is not None:
-                if self._connector.NewPLC(MD5, data, extrafiles) and self.GetIECProgramsAndVariables():
+
+            if self._connector.NewPLC(MD5, object_blob, extrafiles):
+                if self.GetIECProgramsAndVariables():
                     self.UnsubscribeAllDebugIECVariable()
                     self.ProgramTransferred()
                     if self.AppFrame is not None:
@@ -1999,9 +1998,9 @@ class ProjectController(ConfigTreeNode, PLCControler):
                     self.logger.write(_("PLC installed successfully.\n"))
                     success = True
                 else:
-                    self.logger.write_error(_("Error while uploading data\n"))
+                    self.logger.write_error(_("Missing debug data\n"))
             else:
-                self.logger.write_error(_("Missing debug data\n"))
+                self.logger.write_error(_("PLC couldn't be installed\n"))
 
         wx.CallAfter(self.UpdateMethodsFromPLCStatus)
         return success
