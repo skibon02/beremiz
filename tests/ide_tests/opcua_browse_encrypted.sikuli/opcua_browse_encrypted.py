@@ -15,6 +15,8 @@ def test(app):
 
     server = AuxiliaryProcess(app, ["/bin/bash",os.path.join(getBundlePath(),"opcua_service.bash")])
 
+    server.waitPatternInStdout("CERTS READY", 5)
+
     app.doubleClick(["opcua_0", "opcua"])
 
     app.WaitIdleUI()
@@ -62,4 +64,4 @@ def test(app):
 
     return res
 
-run_test(test, testproject="opcua_browse")
+run_test(test, testproject="opcua_browse_encrypted")

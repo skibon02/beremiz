@@ -88,7 +88,7 @@ class OPCUAClient(object):
     EditorType = OPCUAClientEditor
 
     def __init__(self):
-        self.modeldata = OPCUAClientModel(self.Log)
+        self.modeldata = OPCUAClientModel(self.Log, self.CTNMarkModified)
 
         filepath = self.GetFileName()
         if os.path.isfile(filepath):
@@ -99,9 +99,15 @@ class OPCUAClient(object):
 
     def GetModelData(self):
         return self.modeldata
-    
+
     def GetConfig(self):
-        cfg = lambda path: self.GetParamsAttributes("OPCUAClient."+path)["value"]
+        def cfg(path): 
+            try:
+                attr=self.GetParamsAttributes("OPCUAClient."+path)
+            except ValueError:
+                return None
+            return attr["value"]
+
         AuthType = cfg("AuthType")
         res = dict(URI=cfg("Server_URI"), AuthType=AuthType)
 
